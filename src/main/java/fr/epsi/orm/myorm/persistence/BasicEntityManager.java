@@ -6,6 +6,7 @@ import fr.epsi.orm.myorm.annotation.Transient;
 import fr.epsi.orm.myorm.lib.NamedPreparedStatement;
 import fr.epsi.orm.myorm.lib.ReflectionUtil;
 import javaslang.Predicates;
+import sun.reflect.Reflection;
 
 import javax.sql.DataSource;
 import javax.swing.text.html.Option;
@@ -40,9 +41,10 @@ public class BasicEntityManager implements EntityManager {
      *  - Class should have one and only one field with the @Id annotation
      *
      * @param persistentClasses
+     * @throws IllegalArgumentException if a class does not match the conditions
      */
     private static void checkPersistentClasses(Set<Class<?>> persistentClasses) {
-
+       
     }
 
     /**
@@ -98,7 +100,8 @@ public class BasicEntityManager implements EntityManager {
         isManagedClass(entity.getClass());
         try {
             Field idField = ReflectionUtil.getFieldDeclaringAnnotation(entity.getClass(), Id.class).get();
-            int affectedRows = executeUpdate(SqlGenerator.generateDeleteSql(entity.getClass()), new HashMap<String, Object>() {{
+            String sql = SqlGenerator.generateDeleteSql(entity.getClass());
+            int affectedRows = executeUpdate(sql, new HashMap<String, Object>() {{
                 put(idField.getName(), ReflectionUtil.getValue(idField, entity).get());
             }});
             return affectedRows > 0;
