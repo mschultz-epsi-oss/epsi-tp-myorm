@@ -38,5 +38,5 @@ Les tests sont réalisés avec une base embarqués utilisant ce [script](src/tes
 
 ## Javadoc
 
-La Javadoc du projet est disponible également dans le repo : [apidocs](docs)  
-Vous pouvez ouvrir le fichier `apidocs/index.html` dans vore navigateur en local pour vidualiser la javadoc.
+La Javadoc du projet est disponible également dans le repo : [Javadoc](https://fteychene.github.io/epsi-tp-myorm/)  
+Vous pouvez également ouvrir le fichier `docs/index.html` dans vore navigateur en local pour vidualiser la javadoc.

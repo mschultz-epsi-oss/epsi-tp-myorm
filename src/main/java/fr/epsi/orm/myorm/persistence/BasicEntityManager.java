@@ -44,7 +44,7 @@ public class BasicEntityManager implements EntityManager {
      * @throws IllegalArgumentException if a class does not match the conditions
      */
     private static void checkPersistentClasses(Set<Class<?>> persistentClasses) {
-       
+
     }
 
     /**
