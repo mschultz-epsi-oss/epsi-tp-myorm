@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -48,13 +49,18 @@ public class BasicEntityManagerTest {
     @Test
     public void testFind() {
         User expected = new User();
-        expected.setId(2l);
+        expected.setId(2L);
         expected.setFirstName("Robert");
         expected.setLastName("Martin");
         expected.setEmail("uncle@bob.com");
-        expected.setBirthDate(LocalDate.of(1962, 04,17));
+        expected.setBirthDate(LocalDate.of(1962, 4,17));
 
-        Optional<User> actual = em.find(User.class, 2l);
+        Optional<User> actual = null;
+        try {
+            actual = em.find(User.class, 2L);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (!actual.isPresent()) {
             fail("User not found in db");
         }
@@ -64,61 +70,87 @@ public class BasicEntityManagerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFindReject() {
-        em.find(InvalidUserNoEntity.class, null);
+        try {
+            em.find(InvalidUserNoEntity.class, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testFindAll() {
         User expected = new User();
-        expected.setId(0l);
+        expected.setId(0L);
         expected.setFirstName("Linus");
         expected.setLastName("Torvald");
         expected.setEmail("linux.torvald@linux.org");
         expected.setBirthDate(LocalDate.of(1969,12, 28));
         User expected1 = new User();
-        expected1.setId(1l);
+        expected1.setId(1L);
         expected1.setFirstName("Brian");
         expected1.setLastName("Goetz");
         expected1.setEmail("brian.goetz@oracle.com");
         expected1.setBirthDate(LocalDate.of(1970, 11,22));
         User expected2 = new User();
-        expected2.setId(2l);
+        expected2.setId(2L);
         expected2.setFirstName("Robert");
         expected2.setLastName("Martin");
         expected2.setEmail("uncle@bob.com");
-        expected2.setBirthDate(LocalDate.of(1962,04, 17));
+        expected2.setBirthDate(LocalDate.of(1962,4, 17));
 
         List<User> expectedStream = Arrays.asList(expected, expected1, expected2);
-        assertEquals(expectedStream, em.findAll(User.class));
+        try {
+            assertEquals(expectedStream, em.findAll(User.class));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testFindAllReject() {
-        em.findAll(InvalidUserNoEntity.class);
+        try {
+            em.findAll(InvalidUserNoEntity.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testInsert() {
         User user = new User();
-        user.setId(0l);
+        user.setId(0L);
         user.setFirstName("Test");
         user.setLastName(null);
         user.setEmail("test.null@gmail.com");
-        user.setBirthDate(LocalDate.of(1990, 04,23));
+        user.setBirthDate(LocalDate.of(1990, 4,23));
 
-        Optional<User> persistedUser = em.save(user);
+        Optional<User> persistedUser = null;
+        try {
+            persistedUser = em.save(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertTrue(persistedUser.isPresent());
         user = persistedUser.get();
         assertNotEquals(Long.valueOf(0), user.getId());
         assertEquals(Integer.valueOf(0), user.getConnectionCount());
 
-        User actual = em.find(User.class, user.getId()).orElseThrow(() -> new AssertionError("Error while retrieving new User inserted"));
+        User actual = null;
+        try {
+            actual = em.find(User.class, user.getId()).orElseThrow(() -> new AssertionError("Error while retrieving new User inserted"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertEquals(user, actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInsertReject() {
-        em.save(new InvalidUserNoEntity());
+        try {
+            em.save(new InvalidUserNoEntity());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -128,7 +160,12 @@ public class BasicEntityManagerTest {
         user.setLastName("Teychene");
         user.setEmail("francois.teychene@gmail.com");
 
-        Optional<User> persistedUser = em.save(user);
+        Optional<User> persistedUser = null;
+        try {
+            persistedUser = em.save(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (!persistedUser.isPresent()) fail("Error during insertion");
 
         boolean deleted = em.delete(persistedUser.get());

@@ -1,5 +1,6 @@
 package fr.epsi.orm.myorm.persistence;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public interface EntityManager {
      * @return an Optional with the value from the database as an instance of entityClass
      * @throws IllegalArgumentException if entityClass is not managed by the entity manager
      */
-    <T> Optional<T> find(Class<T> entityClass, Object id);
+    <T> Optional<T> find(Class<T> entityClass, Object id) throws SQLException;
 
     /**
      * Return all the databases rows as entity for an entity class
@@ -26,7 +27,7 @@ public interface EntityManager {
      * @return a List with th rows from database empty List if there is none
      * @throws IllegalArgumentException if entityClass is not managed by the entity manager
      */
-    <T> List<T> findAll(Class<T> entityClass);
+    <T> List<T> findAll(Class<T> entityClass) throws SQLException;
 
     /**
      * Save an entity in the database
@@ -35,7 +36,7 @@ public interface EntityManager {
      * @return an Optional with the persisted entity (with generated id if needed), Optional.empty() if the save has failed
      * @throws IllegalArgumentException if entityClass is not managed by the entity manager
      */
-    <T> Optional<T> save(T entity);
+    <T> Optional<T> save(T entity) throws SQLException;
 
     /**
      * Delete an entity from the database

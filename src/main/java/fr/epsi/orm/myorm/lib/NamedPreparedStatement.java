@@ -31,6 +31,10 @@ public class NamedPreparedStatement {
         return prepare(connection, sql, Statement.NO_GENERATED_KEYS);
     }
 
+    public static NamedPreparedStatement prepareWithGeneratedKeys(Connection connection, String sql) throws SQLException {
+        return prepare(connection, sql, Statement.RETURN_GENERATED_KEYS);
+    }
+
     public void setParameter(final String parameterName, Object value) {
         try {
             Optional<Parameter> parameter = parameters.stream()
